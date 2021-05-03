@@ -4,11 +4,21 @@ const Sauce = require('../models/sauce');
 // Package pour la suppression
 const fs = require('fs');
 
+//regex
+const regex = /[a-zA-Z0-9 _.,'’(Ééèàû)]+$/;
+ 
 //créer une sauce
 exports.createSauces = (req, res, next) => {
   //analyse de JSON.parse() pour obtenir un objet utilisable
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
+
+  // Si le Regex n'est pas valide
+  if (!regex.test(sauceObject.name) || !regex.test(sauceObject.manufacturer) ||
+        !regex.test(sauceObject.description) || !regex.test(sauceObject.mainPepper) ||
+        !regex.test(sauceObject.heat)) {
+        return res.status(500).json({ error: 'Des champs contiennent des caractères invalides' });
+    }
 
   const sauce = new Sauce({
     ...sauceObject,
@@ -19,7 +29,7 @@ exports.createSauces = (req, res, next) => {
     usersLiked: [],
     usersDisliked: []
   });
-  Sauce.save()
+  sauce.save()
     .then(() => res.status(201).json({ message: 'Sauce enregistré !'}))
     .catch(error => res.status(400).json({ error }));
 }; 

@@ -57,7 +57,7 @@ exports.signup = (req, res, next) => {
               token: jwt.sign(
                 // Attribution du token d'authentification qui durera 24h
                 { userId: user._id },
-                'T66755GJS8ZK3K4BB4777D777bdhs66',
+                'RANDOM_TOKEN_SECRET',
                 { expiresIn: '24h' }
               )
             });

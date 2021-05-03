@@ -1,11 +1,11 @@
 // Plugin Npm Node.js
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const saucesRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 const path = require('path');
 const helmet = require('helmet');
+const dotenv = require('dotenv').config();
 
 
 const app = express();
@@ -27,8 +27,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// Traitement des sonnées par BodyParser 
-app.use(bodyParser());
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+
 app.use(helmet());
 
 // Chemin virtuel pour les fichiers statiques tel que nos images
