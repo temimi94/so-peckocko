@@ -2,13 +2,13 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-
 // Import du modèle User
 const User = require('../models/User');
 
 // Création d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
-  //Hashage du mot de passe par Bcrypt
+
+  //Hashage du mot de passe par Bcrypt, et demande de saler le mot de passe 10fois
   bcrypt.hash(req.body.password, 10)
       .then(
         hash => {
@@ -57,7 +57,7 @@ exports.signup = (req, res, next) => {
               token: jwt.sign(
                 // Attribution du token d'authentification qui durera 24h
                 { userId: user._id },
-                'RANDOM_TOKEN_SECRET',
+                process.env.TOKEN,
                 { expiresIn: '24h' }
               )
             });

@@ -1,17 +1,24 @@
-// Plugin Npm Node.js
 const express = require('express');
+//facilite l'intéraction avec la BD
 const mongoose = require('mongoose');
-const saucesRoutes = require('./routes/sauces');
-const userRoutes = require('./routes/user');
 const path = require('path');
+// aide à protéger l'application de certaine vulnérabilité en configurant de manière appropriée des en-tête
 const helmet = require('helmet');
 const dotenv = require('dotenv').config();
+// nettoie les données fournis par l'utilisateur pour empecher les injection ( nettoie les $ et les .)
+const mongoSanitize = require('express-mongo-sanitize');
+const bodyParser = require('body-parser');
+
+
+const saucesRoutes = require('./routes/sauces');
+const userRoutes = require('./routes/user');
+
 
 
 const app = express();
 
 //la connection a MongoDB
-mongoose.connect('mongodb+srv://hamdaoui:OU0doYNK4HIu1SVU@cluster0.xhcu8.mongodb.net/Cluster0?retryWrites=true&w=majority',
+mongoose.connect( process.env.DB_CONNEXION,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -27,12 +34,12 @@ app.use((req, res, next) => {
   next();
 });
 
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+//tronsorme les données POST en un objet JSON
+app.use(bodyParser.json());
 
 
 app.use(helmet());
+app.use(mongoSanitize());
 
 // Chemin virtuel pour les fichiers statiques tel que nos images
 app.use('/images', express.static(path.join(__dirname, 'images')));

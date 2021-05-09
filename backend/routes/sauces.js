@@ -6,7 +6,7 @@ const router = express.Router();
 const saucesCtrl = require('../controllers/sauces');
 
 // Middlewares avec auth pour sécuriser les connexions et Multher pour la gestion des images
-const auth = require('../middelwear/auth');
+const auth = require('../middelwear/auth'); //vérifier que l'utilisateur es authentifié, avant d'authoriser l'envoie
 const multer = require('../middelwear/multer');
 
 //les routes
